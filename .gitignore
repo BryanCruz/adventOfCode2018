@@ -1,0 +1,4 @@
+.stack-work/
+adventOfCode2018.cabal
+*~
+!.gitignore
