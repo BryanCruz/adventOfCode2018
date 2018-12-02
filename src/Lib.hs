@@ -5,6 +5,7 @@ module Lib
       inventoryManagementSystem2
     ) where
 
+import qualified Data.Set as Set
 import Debug.Trace
 
 -- Day 1
@@ -22,18 +23,19 @@ chronalCalibration2 :: IO ()
 chronalCalibration2 = do
     content <- getContents
     let numbers = getNumbers content
-        result  = repeatedFrequency [0] (concat $ repeat numbers)
+        result  = repeatedFrequency Set.empty (concat $ repeat numbers) 0
     putStrLn $ show result
 
     where
-    repeatedFrequency alreadySeen numbers
-        | currFreq `elem` alreadySeen = currFreq
-        | otherwise                   = repeatedFrequency nextAlreadySeen nextNumbers
+    repeatedFrequency :: Set.Set Integer -> [Integer] -> Integer -> Integer
+    repeatedFrequency alreadySeen numbers lastFreq
+        | currFreq `Set.member` alreadySeen = currFreq
+        | otherwise                         = repeatedFrequency nextAlreadySeen nextNumbers currFreq
         where
             currValue       = head numbers
-            currFreq        = head alreadySeen + currValue
+            currFreq        = lastFreq + currValue
             nextNumbers     = tail numbers
-            nextAlreadySeen = currFreq : alreadySeen
+            nextAlreadySeen = Set.insert currFreq alreadySeen
 -- Day 2
 --
 --     Part 1
