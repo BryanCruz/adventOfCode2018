@@ -67,7 +67,7 @@ inventoryManagementSystem2 :: IO ()
 inventoryManagementSystem2 = do
     content <- getContents
     let boxes        = lines content
-        (box1, box2) = head $ filter (differByOne) [(boxA, boxB) | boxA <- boxes, boxB <- boxes]
+        (box1, box2) = head $ filter (differByOne) $ combinations boxes
         result       = removeEqual (box1, box2)
     putStrLn result
 
@@ -101,3 +101,7 @@ quicksort (x:xs) = minors ++ [x] ++ majors
     where
         minors = quicksort [a | a <- xs, a <= x]
         majors = quicksort [a | a <- xs, a  > x]
+
+combinations :: [a] -> [(a, a)]
+combinations []     = []
+combinations (x:xs) = [(x, y) | y <- xs] ++ (combinations xs)
