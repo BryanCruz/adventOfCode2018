@@ -64,7 +64,28 @@ inventoryManagementSystem1 = do
 
 --    Part 2
 inventoryManagementSystem2 :: IO ()
-inventoryManagementSystem2 = undefined
+inventoryManagementSystem2 = do
+    content <- getContents
+    let boxes        = lines content
+        (box1, box2) = head $ filter (differByOne) [(boxA, boxB) | boxA <- boxes, boxB <- boxes]
+        result       = removeEqual (box1, box2)
+    putStrLn result
+
+    where
+        differByOne ([], xs)
+            | length xs == 1 = True
+            | otherwise      = False
+        differByOne (xs, [])
+            | length xs == 1 = True
+            | otherwise      = False
+        differByOne ((x:xs), (y:ys))
+            | x == y    = differByOne (xs, ys)
+            | otherwise = xs == ys       
+
+        removeEqual ([], []) = []
+        removeEqual ((x:xs), (y:ys))
+            | x == y    = x : removeEqual (xs, ys)
+            | otherwise = xs
 
 -- Util
 getInt :: [Char] -> Integer
