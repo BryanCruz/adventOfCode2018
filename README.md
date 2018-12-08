@@ -8,16 +8,16 @@
 
 ## How to use
 
-The problems are implemented in src/Lib.hs.
+The problems are implemented in src/Day#Part#.hs.
 
-To execute a problem, change the call in app/Main.hs with the name of the problem (the names are listed below), compile and execute passing the input with "<", for example:
+To execute a problem, change the import in app/Main.hs with the day and part of the problem of the problem (the problems are listed below), compile and execute passing the input with "<", for example:
 
 ```shell
 stack build && \
-stack run < input/chronalCalibration.txt
+stack run < input/Day1.txt
 ```
  
 ## Problems Solved
 
-* chronalCalibration1
-* chronalCalibration2
+* Day 1 - Chronal Calibration
+* Day 2 - Inventory Management System

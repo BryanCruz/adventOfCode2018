@@ -1,6 +1,6 @@
 module Main where
 
-import Lib
+import Day2Part2
 
 main :: IO ()
-main = someFunc
+main = sol
