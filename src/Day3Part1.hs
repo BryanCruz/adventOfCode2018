@@ -3,7 +3,7 @@ module Day3Part1
 
 import Util
 
--- Day 1 - Part 1
+-- Day 3 - Part 1
 -- No Matter How You Slice It
 sol :: IO ()
 sol = do
