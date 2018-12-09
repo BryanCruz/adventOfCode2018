@@ -1,6 +1,11 @@
 module Date 
 ( Date
 , parseDate
+, year
+, month
+, day
+, hour
+, minute
 ) where
 
 import Debug.Trace
@@ -30,7 +35,7 @@ instance Show Date where
       completeWith0s n x
         | n < x     = show x
         | otherwise = '0' : completeWith0s (round $ (fromIntegral n)/10) x
- 
+
 parseDate :: [Char] -> Date
 parseDate ('[':y1:y2:y3:y4:'-':m1:m2:'-':d1:d2:' ':h1:h2:':':min1:min2:']':[])
   = Date year month day hour minute
