@@ -10,8 +10,11 @@ data Date = Date { year   :: Int
                  , day    :: Int
                  , hour   :: Int
                  , minute :: Int
-                 } deriving (Read)
+                 } deriving (Read, Eq, Ord)
 
+
+-- Example of Date for Show and Read:
+--  [2018-12-09 13:17]
 instance Show Date where
   show d
     = "[" ++ year' ++ "-" ++ month' ++ "-" ++ day' ++ " " ++ hour' ++ ":" ++ minute' ++ "]" 
