@@ -13,14 +13,14 @@ data Date = Date { year   :: Int
                  } deriving (Read)
 
 instance Show Date where
-  show (Date year month day hour minute)
+  show d
     = "[" ++ year' ++ "-" ++ month' ++ "-" ++ day' ++ " " ++ hour' ++ ":" ++ minute' ++ "]" 
     where
-      year'      = trace (show (completeWith0s 1000 year)) completeWith0s 1000 year
-      month'     = trace (show (completeWith0s 10   month)) completeWith0s 10   month
-      day'       = trace (show (completeWith0s 10   day)) completeWith0s 10   day
-      hour'      = trace (show (completeWith0s 10   hour)) completeWith0s 10   hour
-      minute'    = trace (show (completeWith0s 10   minute)) completeWith0s 10   minute
+      year'      = completeWith0s 1000 $ year   d
+      month'     = completeWith0s 10   $ month  d
+      day'       = completeWith0s 10   $ day    d
+      hour'      = completeWith0s 10   $ hour   d
+      minute'    = completeWith0s 10   $ minute d
 
       completeWith0s :: Int -> Int -> [Char] 
       completeWith0s 0 0 = ""
