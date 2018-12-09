@@ -1,4 +1,4 @@
-module Day4Part1
+module Day4
   (sol) where
 
 import Util
@@ -6,13 +6,14 @@ import Date
 import Debug.Trace
 import qualified Data.HashMap.Lazy as Map
 
--- Day 4 - Part 1
+-- Day 4 - Part 1 and 2
 -- Repose Record
 sol :: IO ()
 sol = do
   content <- getContents
-  let result = getResult content
-  putStrLn $ show result
+  let (result1, result2) = getResults content
+  putStrLn $ show result1
+  putStrLn $ show result2
 
 data Entry = Entry { date :: Date, info :: Info Int} deriving (Show, Read)
 
@@ -28,26 +29,32 @@ instance Ord Entry where
   compare e1 e2
     = compare (date e1) (date e2)
 
-getResult content = do
+getResults content = do
   let entries             = quicksort $ map getEntry $ lines content
       shifts              = splitShifts entries
       guardToMinutes      = foldl insertGuardMinutes guardToMinutesEmpty shifts
       guardToMinutesList  = Map.toList guardToMinutes
-      (chosenGuard, _)    = maximumTotal [(guard, mySum $ Map.toList minutesToSleepingMinutes) | (guard, minutesToSleepingMinutes) <- guardToMinutesList]
-      (chosenMinute, _)   = maximumTotal $ Map.toList $ guardToMinutes Map.! chosenGuard
-  chosenGuard*chosenMinute
+    
+      (chosenGuard1,  _)  = maximumTotal [(guard, mySum $ Map.toList minutesToSleepingMinutes) | (guard, minutesToSleepingMinutes) <- guardToMinutesList]
+      (chosenMinute1, _)  = maximumTotal $ Map.toList $ guardToMinutes Map.! chosenGuard1
+    
+      ((chosenGuard2, chosenMinute2), _) = maximumTotal [((guard, maxMinute), maxQtt) | (guard, guardMapToMinutes) <- guardToMinutesList, let (maxMinute, maxQtt) = maximumTotal $ Map.toList guardMapToMinutes]
+
+      result1 = chosenGuard1*chosenMinute1
+      result2 = chosenGuard2*chosenMinute2
+  (result1, result2)
     where
       mySum []                  = 0
       mySum ((_, n):xs)         = n + mySum xs
 
-      maximumTotal :: [(Int, Int)] -> (Int, Int)
-      maximumTotal [(guard, n)]  = (guard, n)
-      maximumTotal ((currGuard, currN):xs)
+      maximumTotal :: [(a, Int)] -> (a, Int)
+      maximumTotal [(k, n)]  = (k, n)
+      maximumTotal ((currK, currN):xs)
         = if   currN > nextN
-          then (currGuard, currN)
-          else (nextGuard, nextN)
+          then (currK, currN)
+          else (nextK, nextN)
         where 
-          (nextGuard, nextN) = maximumTotal xs
+          (nextK, nextN) = maximumTotal xs
 
 insertGuardMinutes :: GuardToMinutes -> Shift -> GuardToMinutes
 insertGuardMinutes guardToMinutes shift
