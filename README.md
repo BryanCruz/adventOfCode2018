@@ -22,3 +22,4 @@ stack run < input/Day1.txt
 * Day 1 - Chronal Calibration
 * Day 2 - Inventory Management System
 * Day 3 - No Matter How You Slice It
+* Day 4 - No Repose
