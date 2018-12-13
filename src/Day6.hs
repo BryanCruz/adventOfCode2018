@@ -9,7 +9,8 @@ import qualified Data.HashMap.Lazy as Map
 sol :: IO ()
 sol = do
   content <- getContents
-  let (result1, result2) = getResults content
+  let result1 = getResult1 content
+      result2 = getResult2 content
   putStrLn result1
   putStrLn result2
 
@@ -29,8 +30,21 @@ parsePoint cs
     x' = read x :: Int
     y' = read y :: Int
 
+-- Part 1
+manhattanDistance :: Point -> Point -> Int
+manhattanDistance (x1, y1) (x2, y2)
+  = abs (x1 - x2) + abs (y1 - y2)
 
-getResults content = do
+minimumSnd []     = error "Empty list"
+minimumSnd [t]    = t
+minimumSnd (t:ts) = if v < v' then (k, v) else (k', v')
+  where
+    (k,   v)  = t
+    (k',  v') = minimumSnd ts
+
+appearsOnce a xs = length [x | x <- xs, x == a] == 1
+
+getResult1 content = do
   let points   = map parsePoint $ lines content
 
       minimumX = minimum [x | (x, _) <- points]
@@ -65,18 +79,30 @@ getResults content = do
 
     
       result1 = show $ maximum largestArea
-      result2 = show largestArea
-  (result1, result2)
+  result1
 
-manhattanDistance :: Point -> Point -> Int
-manhattanDistance (x1, y1) (x2, y2)
-  = abs (x1 - x2) + abs (y1 - y2)
 
-minimumSnd []     = error "Empty list"
-minimumSnd [t]    = t
-minimumSnd (t:ts) = if v < v' then (k, v) else (k', v')
+-- Part 2
+maximumDistance = 9999
+
+distances p points = [manhattanDistance p q | q <- points]
   where
-    (k,   v)  = t
-    (k',  v') = minimumSnd ts
+    
 
-appearsOnce a xs = length [x | x <- xs, x == a] == 1
+getResult2 content = do
+  let points   = map parsePoint $ lines content
+
+      minimumX = minimum [x | (x, _) <- points]
+      minimumY = minimum [y | (_, y) <- points]
+      maximumX = maximum [x | (x, _) <- points]
+      maximumY = maximum [y | (_, y) <- points]
+
+      allPoints = [(x, y) | x <- xRange, y <- yRange]
+        where
+          xRange = [(minimumX-0)..(maximumX+0)]
+          yRange = [(minimumY-0)..(maximumY+0)]
+
+      nearestDistances = [sumDistances | p <- allPoints, let sumDistances = sum $ distances p points, sumDistances <= maximumDistance]
+
+      result2 = show $ length nearestDistances
+  result2 
