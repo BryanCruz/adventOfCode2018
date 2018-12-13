@@ -2,7 +2,9 @@ module Day7
   (sol) where
 
 import Util
-import qualified Data.Set as Set
+import qualified Data.Set  as Set
+import qualified Data.Char as Char
+import qualified Data.HashMap.Lazy as Map
 import Debug.Trace
 
 -- Day 7 - Part 1 and 2
@@ -15,6 +17,7 @@ sol = do
   putStrLn result1
   putStrLn result2
 
+-- Part 1
 -- Inputs are like "Step C must be finished before step A can begin."
 parseDependency :: [Char] -> (Char, Char)
 parseDependency cs = (a, b)
@@ -38,12 +41,10 @@ correctOrder edges = result
     noDependencies   = [x | (x, _) <- edges, not $ x `Set.member` haveDependencies]
 
     currStep         = minimum noDependencies
-
     remainingEdges   = [(x, y) | (x, y) <- edges, x /= currStep]
 
     result           = currStep : correctOrder remainingEdges
 
--- Part 1
 getResult1 content = do
   let dependencies     = map parseDependency $ lines content
 
@@ -54,7 +55,27 @@ getResult1 content = do
 
 
 -- Part 2
+charToInt :: Char -> Int
+charToInt c = Char.ord c - Char.ord 'A' + 1
+
+workers = 5
+
+stepTime = (+60) . charToInt
+
+createGraph :: [(Char, Char)] -> Map.HashMap Char (Set.Set Char)
+createGraph = foldr insertVertex Map.empty
+  where
+    insertVertex (vertex1, vertex2) = Map.insertWith Set.union vertex2 (Set.singleton vertex1)
+
+totalTime 
+
 getResult2 content = do
-  let points   = []
-      result2 = show 2
+  let dependencies     = map parseDependency $ lines content
+
+      wardDependencies = Set.toList $ Set.fromList [ ('0', x) | (x, _) <- dependencies]
+
+      dependencyTree   = createGraph $ dependencies ++ wardDependencies
+
+      result2          = totalTime dependencyTree
+     
   result2 
